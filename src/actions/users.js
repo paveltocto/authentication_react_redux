@@ -1,11 +1,11 @@
 import {LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT} from '../constants/users';
 import {authentication, signOutUser, verifyAuthentication} from '../services/Auth';
 import {history} from "../helpers";
-import {SubmissionError} from "redux-form";
+import {auth} from "../services/Auth"
 
 
-const request = (user) => {
-    return {type: LOGIN_REQUEST, payload: user};
+const request = () => {
+    return {type: LOGIN_REQUEST};
 };
 
 const success = (user) => {
@@ -16,36 +16,50 @@ const failure = (error) => {
     return {type: LOGIN_FAILURE, payload: error};
 };
 
-export const userLogin = (username, password) => {
-    return dispatch => {
-        dispatch(request({user: {email: username}}));
-
-        authentication(username, password).then(
-            response => {
-                dispatch(success({user: {email: response.email, uid: response.uid}}));
-                history.push('/dashboard');
-            },
-            error => {
-                dispatch(failure(error));
-            }
-        );
-    };
-
+const logout = () => {
+    return {type: LOGOUT}
 };
 
-export const verifyAuthenticationUser = () => {
+const responseUser = (response) => {
+    if (response) {
+        return {email: response.email, uid: response.uid}
+    }
+    return {};
+};
+
+export const signIn = (username, password) => {
     return dispatch => {
-        verifyAuthentication().then(function (response) {
-            dispatch(success({user: {email: response.email, uid: response.uid}}));
+        dispatch(request());
+
+        auth.signInWithEmailAndPassword(username, password).then(response => {
+            dispatch(success(responseUser(response)));
+            localStorage.setItem('uid_authentication', response.uid);
+            history.push('/dashboard');
+        }).catch(error => {
+            dispatch(failure(error));
+        });
+    };
+};
+
+export const verifyAuth = () => {
+    return dispatch => {
+        auth.onAuthStateChanged(response => {
+            if (response) {
+                dispatch(success(responseUser(response)));
+            } else {
+                dispatch(logout());
+            }
         });
     }
 };
 
-export const userLogout = () => {
-
+export const signOut = () => {
     return dispatch => {
-        signOutUser().then(() => {
-            dispatch({type: LOGOUT})
+        auth.signOut().then(() => {
+            dispatch(logout())
+            localStorage.removeItem('uid_authentication');
+        }, error => {
+            dispatch(failure(error))
         })
     }
 };

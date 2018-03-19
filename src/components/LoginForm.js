@@ -32,18 +32,15 @@ class LoginForm extends Component {
         this.handleSubmitLogin = this.handleSubmitLogin.bind(this);
     }
 
-
-
     handleSubmitLogin(values, dispatch) {
         if (values.email && values.password) {
-            this.props.userLogin(values.email, values.password);
+            this.props.signIn(values.email, values.password);
         }
     }
 
-
     renderAuthenticationError() {
-        if (this.props.error_message) {
-            return <div className="alert alert-danger">{this.props.error_message}</div>;
+        if (this.props.errorAuthentication) {
+            return <div className="alert alert-danger">{this.props.errorAuthentication.message}</div>;
         }
     }
 

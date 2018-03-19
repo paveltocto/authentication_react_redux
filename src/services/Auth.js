@@ -1,4 +1,4 @@
-import Firebase from 'firebase';
+import firebase from 'firebase';
 
 
 const config = {
@@ -10,7 +10,16 @@ const config = {
     messagingSenderId: "706240772129"
 };
 
-Firebase.initializeApp(config);
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+}
+
+const auth = firebase.auth();
+
+export {auth}
+
+/*
 
 export const authentication = (username, password) => {
     return Firebase.auth().signInWithEmailAndPassword(username, password).then(response => {
@@ -41,4 +50,4 @@ export const signOutUser = () => {
         }, (error) => {
             return Promise.reject(error);
         });
-};
+};*/

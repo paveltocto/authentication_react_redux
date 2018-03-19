@@ -1,19 +1,31 @@
-import {LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT} from '../constants/users'
+import {
+    LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, STATUS_LOGIN_FAILURE, STATUS_LOGIN_LOGOUT,
+    STATUS_LOGIN_REQUEST, STATUS_LOGIN_SUCCESS
+} from '../constants/users'
 
+const initialState = {
+    user: null,
+    status: null,
+    error: null,
+    loading: false
+};
 
-let user = localStorage.getItem('jwt_token');
-const INITIAL_STATE =  user ? {status: 'authenticated'} :  {user: null, status: null, error_message: null, loading: false};
-
-export function authentication(state = INITIAL_STATE, action) {
+export function authentication(state = initialState, action) {
     switch (action.type) {
         case LOGIN_REQUEST:
-            return {...state, user: null, status: 'signin', error_message: null, loading: true};
+            return {...state, user: null, status: STATUS_LOGIN_REQUEST, errorAuthentication: null, loading: true};
         case LOGIN_SUCCESS:
-            return {user: action.payload.user, status: 'authenticated', error_message: null, loading: false};
+            return {user: action.payload, status: STATUS_LOGIN_SUCCESS, errorAuthentication: null, loading: false};
         case LOGIN_FAILURE:
-            return {...state, user: null, status: 'signin', error_message: action.payload.message, loading: false};
+            return {
+                ...state,
+                user: null,
+                status: STATUS_LOGIN_FAILURE,
+                errorAuthentication: action.payload,
+                loading: false
+            };
         case LOGOUT:
-            return {...state, user: null, status: 'logout', error_message: null, loading: false};
+            return {...state, user: null, status: STATUS_LOGIN_LOGOUT, errorAuthentication: null, loading: false};
         default:
             return state
     }

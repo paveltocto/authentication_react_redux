@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {Link} from "react-router-dom";
 import NavLink from "./NavLink";
 import {connect} from "react-redux";
-import {userLogout} from "../actions/users"
+import {signOut} from "../actions/users"
+import {STATUS_LOGIN_SUCCESS} from "../constants/users"
 
 class Header extends Component {
     constructor(props) {
@@ -10,18 +11,19 @@ class Header extends Component {
     }
 
     handleSignOut() {
-        this.props.userLogout();
+        this.props.signOut();
     }
 
     renderLinksRight() {
         const {status} = this.props;
 
-        if (status === 'authenticated') {
+        if (status === STATUS_LOGIN_SUCCESS) {
             return (
                 <React.Fragment>
                     <NavLink className="nav-link" to="/dashboard">Dashboard</NavLink>
                     <li className="nav-item">
-                        <a href="javascript:void(0)" className="nav-link" onClick={() => this.handleSignOut()}>Sign Out</a>
+                        <a href="javascript:void(0)" className="nav-link" onClick={() => this.handleSignOut()}>Sign
+                            Out</a>
                     </li>
                 </React.Fragment>
             )
@@ -66,4 +68,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, {userLogout})(Header);
+export default connect(mapStateToProps, {signOut})(Header);

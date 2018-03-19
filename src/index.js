@@ -3,7 +3,9 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 
 import App from './containers/AppContainer';
-import {store} from "./helpers";
+import {configureStore} from "./helpers/store";
+
+const store = configureStore();
 
 render(
     <Provider store={store}>
