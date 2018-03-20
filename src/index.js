@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 
 import App from './containers/AppContainer';
-import {configureStore} from "./helpers/store";
+import {configureStore} from "./store/configureStore";
 
 const store = configureStore();
 
